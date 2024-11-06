@@ -1,17 +1,17 @@
 import Card from "./Card";
 import Avatar from "./Avatar";
-import {useContext, useEffect, useState} from "react";
-import {useSession, useSupabaseClient} from "@supabase/auth-helpers-react";
-import {UserContext} from "../contexts/UserContext";
+import { useContext, useEffect, useState } from "react";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { UserContext } from "../contexts/UserContext";
 import Preloader from "./Preloader";
 
-export default function PostFormCard({onPost}) {
-  const [content,setContent] = useState('');
-  const [uploads,setUploads] = useState([]);
-  const [isUploading,setIsUploading] = useState(false);
+export default function PostFormCard({ onPost }) {
+  const [content, setContent] = useState('');
+  const [uploads, setUploads] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
   const supabase = useSupabaseClient();
   const session = useSession();
-  const {profile} = useContext(UserContext);
+  const { profile } = useContext(UserContext);
 
   function createPost() {
     supabase.from('posts').insert({
@@ -41,7 +41,7 @@ export default function PostFormCard({onPost}) {
           .upload(newName, file);
         if (result.data) {
           const url = process.env.NEXT_PUBLIC_SUPABASE_URL + '/storage/v1/object/public/photos/' + result.data.path;
-          setUploads(prevUploads =>[...prevUploads,url]);
+          setUploads(prevUploads => [...prevUploads, url]);
         } else {
           console.log(result);
         }
@@ -58,8 +58,8 @@ export default function PostFormCard({onPost}) {
         </div>
         {profile && (
           <textarea value={content}
-                    onChange={e => setContent(e.target.value)}
-                    className="grow p-3 h-14" placeholder={`Whats on your mind, ${profile?.name}?`} />
+            onChange={e => setContent(e.target.value)}
+            className="grow p-3 h-14" placeholder={`Whats on your mind, ${profile?.name}?`} />
         )}
       </div>
       {isUploading && (
@@ -69,9 +69,9 @@ export default function PostFormCard({onPost}) {
       )}
       {uploads.length > 0 && (
         <div className="flex gap-2">
-          {uploads.map(upload => (
-            <div className="mt-2" >
-              <img src={upload} alt="" className="w-auto h-24 rounded-md" />
+          {uploads.map((upload, index) => (
+            <div key={upload} className="mt-2">
+              <img src={upload} alt={`Uploaded ${index}`} className="w-auto h-24 rounded-md" />
             </div>
           ))}
         </div>
