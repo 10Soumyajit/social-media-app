@@ -1,4 +1,4 @@
-import ProfilePage from "../../profile";
+import ProfilePage from "..";
 
 export default function ProfileAbout() {
   return <ProfilePage />;
